@@ -1,0 +1,25 @@
+1.	aws ec2 create-vpc  --cidr-block  10.0.0.0/16
+2.	aws ec2 create-tag  --resources vpc-0509b42b4d78697a8  --tags Key=Name,Value=samplevpc
+3.	aws ec2 create-subnet  --vpc-id  vpc-0509b42b4d78697a8  --cidr-block 10.0.1.0/24
+4.	aws ec2 create-tags  --resources  subnet-007906ccf094d3ab6  --tags Key=Name,Value=pub-subnet
+5.	aws ec2 create-subnet --vpc-id  vpc-0509b42b4d78697a8  --cidr-block 10.0.2.0/24
+6.	aws ec2 create-tags  --resources subnet-06e2621534711eed9--tags Key=Name,Value=pvt-subnet
+7.	aws ec2 create-internet-gateway
+8.	aws ec2 create-tags --resources igw-0b1956c70c74ad46c --tags Key=Name,Value=sample-igw
+9.	aws ec2 attach-internet-gateway --internet-gateway-id    --vpc-id vpc-0509b42b4d78697a8
+10.	aws ec2 create-route-table --vpc-id vpc-0509b42b4d78697a8
+11.	aws ec2 create-tags -- - resources rtb 0781860d552409233 --tags Key=Name,Value=pub-rt
+12.	aws ec2 create-route-table --vpc-id vpc-0509b42b4d78697a8
+13.	aws ec2 create-tags --resources rtb-04dd88c6bafe172c6 --tags Key=Name,Value=pvt-rt
+14.	aws ec2 associate-route-table --route-table-id rtb-0781860d552409233 --subnet-id subnet-007906ccf094d3ab6
+15.	aws ec2 associate-route-table --route-table-id rtb-04dd88c6bafe172c6   --subnet-id subnet-06e2621534711eed9
+16.	aws ec2 create-security-group  --group-name nginx-sg  --vpc-id vpc-0509b42b4d78697a8
+17.	aws ec2 create-tags  --resources sg-0093cc87737cfec11 --tags Key=Name,Value=web-sg
+18.	aws ec2 authorize-security-group-ingress  --group-id sg-0093cc87737cfec11 --protocol  tcp --port 22 --cidr 0.0.0.0/0
+19.	aws ec2 authorize-security-group-ingress  --group-id sg-0093cc87737cfec11 --protocol  tcp --port 80 --cidr 0.0.0.0/0
+20.	aws ec2 create-network-acl --vpc-id vpc-0509b42b4d78697a8
+21.	aws ec2 create-network-acl-entry --network-acl-id acl-0fd5714039c7bc94e --ingress --rule-number 100 --protocol tcp --port-range From=80,To=80 --cidr-block 192.168.0.5/25 --rule-action deny
+22.	aws ec2 create-network-acl-entry --network-acl-id acl-0fd5714039c7bc94e --ingress --rule-number 101 --protocol tcp --port-range From=80,To=80 --cidr-block 192.168.0.6/25 --rule-action deny
+23.	aws ec2 create-key-pair --key-name nginx --query 'keymaterial' --output text > cs123
+24.	aws ec2 run-instances --image-id ami-011b3ccf1bd6db744 --count 1 --instance-type t2.micro --key-name nginx --security-group-ids sg-0093cc87737cfec11  --subnet-id subnet-06e2621534711eed9 --associate-public-ip-address
+25.	aws ec2 create-tags --resources i-0f66fee53754656ec --tags Key=Name,Value=Webserver
