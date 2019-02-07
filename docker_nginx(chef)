@@ -1,0 +1,56 @@
+# Docker nginx:
+1.	cd /chef-repo
+2.	chef generate cookbook docker-nginx-start
+3.	cd docker-nginx/recipes
+4.	vi default.rb
+docker_service 'default' do
+  action [:create, :start]
+end
+
+file “"/home/docker/html/index.html” do
+   source “index.html”
+   mode “755”
+end
+
+docker_image 'nginx' do
+  tag 'latest'
+  action :pull
+end
+
+
+docker_container 'my_nginx' do
+  repo 'nginx'
+  tag 'latest'
+  port '81:80'
+  volumes "/home/docker/html:/usr/share/nginx/html"
+end
+
+5.	vi index.html
+<html>				
+  <head>
+    <title>Hello there</title>
+  </head>
+  <body>
+    <h1>This is a docker test</h1>
+    <p>Please work!</p>
+  </body>
+</html>
+6.	cp index.html /chef-repo/files
+7.	cd /chef-repo
+8.	knife bootstrap ipaddress(node) –X username –P password –nodename nginx-node –sudo
+9.	knife cookbook upload docker-nginx-stop
+10.	knife node run-list add nginx-node recipe[docker-nginx-stop]
+11.	ssh ec2-user@ip
+12.	cd /chef-repo
+13.	chef generate cookbook docker-nginx-stop
+14.	cd docker-nginx-stop/recipes
+15.	vi default.rb
+docker_container 'my_nginx' do
+				action :stop
+				end
+16.	cd /chef-repo
+17.	knife bootstrap ipaddress(node) –X username –P password –nodename nginx-node –sudo
+18.	knife cookbook upload docker-nginx-stop
+19.	knife node run-list add nginx-node recipe[docker-nginx-stop]
+20.	ssh ec2-user@ip
+21.	sudo chef-client
