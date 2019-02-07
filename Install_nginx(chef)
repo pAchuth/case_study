@@ -1,0 +1,40 @@
+Chef configuration management:-
+Nginx recipe(install and start):-
+Chef workstation:
+1.	cd chef-repo
+2.	chef generate cookbook nginx
+3.	cd /cookbooks/nginx
+4.	cd recipes
+5.	vi default.rb 
+package 'nginx' do
+  action :install
+end
+
+
+service 'nginx' do
+  action [ :enable, :start ]
+end
+
+
+cookbook_file "/var/www/html/index.html" do
+  source "index.html"
+  mode "0644"
+end
+6.	chef generate file index.html
+7.	cd /chef-repo/cookbooks/nginx/file
+8.	vi index.html
+<html>
+  <head>
+    <title>Hello there</title>
+  </head>
+  <body>
+    <h1>This is a test</h1>
+    <p>Please work!</p>
+  </body>
+</html>
+9.	cd /chef-repo
+10.	knife bootstrap ipaddress(node) –X username –P password –nodename nginx-node –sudo
+11.	knife cookbook upload nginx
+12.	knife node run-list add nginx-node recipe[nginx]
+13.	ssh ec2-user@ip
+14.	sudo chef-client
