@@ -1,7 +1,7 @@
 1.	aws ec2 create-vpc  --cidr-block  10.0.0.0/16
 2.	aws ec2 create-tag  --resources vpc-0509b42b4d78697a8  --tags Key=Name,Value=samplevpc
 3.	aws ec2 create-subnet  --vpc-id  vpc-0509b42b4d78697a8  --cidr-block 10.0.1.0/24
-4.	aws ec2 create-tags  --resources  subnet-007906ccf094d3ab6  --tags Key=Name,Value=pub-subnet
+..4.	aws ec2 create-tags  --resources  subnet-007906ccf094d3ab6  --tags Key=Name,Value=pub-subnet
 5.	aws ec2 create-subnet --vpc-id  vpc-0509b42b4d78697a8  --cidr-block 10.0.2.0/24
 6.	aws ec2 create-tags  --resources subnet-06e2621534711eed9--tags Key=Name,Value=pvt-subnet
 7.	aws ec2 create-internet-gateway
